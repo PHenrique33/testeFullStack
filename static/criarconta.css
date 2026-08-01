@@ -1,0 +1,25 @@
+body{
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    height: 100vh;
+    background-color: coral;
+}
+#container{
+    background-color: aqua;
+    padding: 30px 100px;
+    border-radius: 30px;
+}
+button{
+    height: 30px;
+    width: 100px;
+    background-color: black;
+    color: red;
+}
+#possuoConta{
+    background-color: purple;
+}
+#possuoConta:hover{
+    background-color: blueviolet;
+    cursor: default;
+}

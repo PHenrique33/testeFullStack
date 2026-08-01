@@ -1,0 +1,17 @@
+body{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+    background-color: coral;
+}
+#container{
+    background-color: azure;
+    padding: 20px 30px;
+    border-radius: 30px;
+}
+#criarConta:hover{
+    cursor: default;
+    color: blue;
+    font-size: 24px;
+}

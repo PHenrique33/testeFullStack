@@ -1,0 +1,239 @@
+body{
+    background-color: #000000;
+}
+div{
+    border-radius: 20px;
+
+}
+h6{
+    display: inline-block;
+    font-size: 24px;
+    margin: 5px 0px;
+}
+.bigthree{
+    margin: 0.05%;
+    margin-bottom: 100px;
+}
+#esquerda{
+    transform: translateY(-6px);
+    background-color: #7E5731;
+    align-items: flex-start;
+    display: inline-flex;
+    width: 30%;
+    height: 100vh;
+    flex-wrap: wrap;
+}
+#centro{
+    transform: translateY(-90px);
+    display: inline-flex;
+    width: 39%;
+    height: 100vh;
+    background-color: #FFD8B3;
+    flex-wrap: wrap;
+    justify-content: center;
+    align-items: flex-start;
+}
+#direita{
+    transform: translateY(-58px);
+    display: inline-flex;
+    width: 30%;
+    height: 100vh;
+    background-color: #7E5731;
+    flex-wrap: wrap;
+    justify-content: center;
+    align-items: flex-start;
+}
+#pesquisa{
+    width: 90%;
+    height: 30px;
+    background-color: #7E5731;
+    border-radius: 30px;
+    border: none;
+}
+#sugestoes{
+    min-width: 90%;
+    transform: translateY(20px);
+    position: absolute;
+    display: block;
+    background-color: #ffffffd7;
+    max-height: 300px;
+    min-width: 100px;
+    overflow: auto;
+}
+#cancao{
+    font-size: 30px;
+}
+#cantor{
+    font-size: 15px;
+}
+.songs{
+    transform: translateX(5%);
+    display: inline-block;
+    background-color: #7E5731;
+    width: 90%;
+    border-radius: 10px;
+    padding: 2px 2px;
+    margin: 2px 2px;
+    font-weight: 900;
+}
+.songs:hover{
+    background-color: #b17b45;
+}
+#popup{
+    display:none;
+    top: 150px;
+    text-align: center;
+    position: absolute;
+    border-radius: 60px;
+    width: 600px;
+    background-color: #b1967c;
+    z-index: 1;
+}
+.popup{
+    padding: 10px 0px;
+}
+.popup:hover{
+    background-color: #CCB8CC;
+    font-size: 18px;
+}
+#titulo{
+    margin-bottom: 0px;
+    max-width: 80%;
+}
+#artista{
+    margin: 0px 10px;
+    padding-bottom: 10px;
+}
+#notificacao{
+    overflow: hidden;
+    width: 70%;
+    display: inline-block;
+    background-color: #FFD8B3;
+    transform: translateY(10px);
+}
+.notificacao{
+    text-align: center;
+    color: blueviolet;
+    background-color: #7E5731;
+    border-radius: 30px;
+    cursor:default;
+}
+.notificacao:hover{
+    text-align: center;
+    background-color: #b17b45;
+    border-radius: 30px;
+    cursor:default;
+    transform: scale(1.1);
+}
+.imagem{
+    height: 75px;
+    border-radius: 10px;
+}
+#recomendacao{
+    display: inline-block;
+    height: 40%;
+    overflow: auto;
+    background-color: aquamarine;
+}
+.recomendacao{
+    justify-content: center;
+    background-color: #7E5731;
+    border-radius: 10px;
+    margin: 10px 10px;
+}
+.recomendacao:hover{
+    background-color: hsl(0, 0%, 45%)
+}
+#letra{
+    background-color: #7E5731;
+    width: 90%;
+}
+#containermusica{
+    border-radius: 50px;
+    margin-top: 30px;
+    margin-left: 10px;
+    margin-right: 10px;
+    background-color: #FFEAD3;
+    display: flex;
+    justify-items: center;
+    justify-content: center;
+    width: 90%;
+    flex-wrap: wrap;
+}
+#containerimagem{
+    margin-top: 30px;
+    display: inline-block;
+}
+#imagem{
+    height: 75px;
+    border-radius: 10px;
+}
+h1{
+    margin: 20px 5px;
+}
+hr{
+    height: 4px;
+    width: 100%;
+    background-color: black;
+    color: black;
+}
+.historico{
+    margin-left: 30px;
+    color: hsl(0, 0%, 45%);
+    background-color: #FFEAD3;
+    border-radius: 20px;
+    padding: 5px;
+}
+.historico:hover{
+    color: hsl(0, 0%, 0%);
+    background-color: #CCB8CC;
+    cursor:default ;
+}
+.playlist{
+    margin-left: 30px;
+    color: hsl(0, 0%, 45%);
+    background-color: #FFEAD3;
+    border-radius: 20px;
+    padding: 5px;
+}
+.playlist:hover{
+    color: hsl(0, 0%, 0%);
+    background-color: #CCB8CC;
+    cursor:default ;
+}
+#textoPassado{
+    font-size: 20px;
+    text-align: center;
+}
+#textoFuturo{
+    font-size: 20px;
+    text-align: center;
+}
+#textoPresente{
+    font-size: 30px;
+    text-align: center;
+}
+#animacao{
+    margin-top: 30px;
+    animation-name: rodar;
+    animation-duration: 3s;
+    animation-iteration-count: infinite;
+    animation-timing-function: linear;
+}
+#comandos{
+    flex-wrap: wrap;
+    display: flex;
+    justify-content: center;
+
+    
+}
+.comandos{
+    min-width: 5%;
+    min-height: 5%;
+    flex-wrap: wrap;
+    display: inline-block;
+}
+@keyframes rodar{
+    100%{transform: rotate(360deg);}
+    
+}
