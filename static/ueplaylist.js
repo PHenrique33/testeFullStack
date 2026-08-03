@@ -12,6 +12,7 @@ let playlist = 0;
 const listaNotificacao = ['mensagem 1', ' notificacao comicamente grande pra ver se cabe na barrinha de notificacao oi olá', 'mensagem 3']
 const notificacao = document.getElementById("not1")
 const listaRecomendacao = document.getElementsByClassName("recomendacao")
+const path = "../static/musicas/"
 const musicasProvisorio = [
     ["evidencias", "chitaozinho & xororo"],
     ["tempo perdido", "legiao urbana"],
@@ -109,7 +110,7 @@ function Pausar(){
 function CarregarBarra(){
     document.getElementById("barra").max = musica.duration;
     document.getElementById("tempoTotal").textContent = formatarTempo(musica.duration);
-    console.log('ta funcionnando')
+    console.log('aaaaaaaaaaaaa')
 }
 function formatarTempo(tempo){
     const minutos = Math.floor(tempo / 60)
@@ -161,16 +162,22 @@ function Curtir(){
         curtida = 0
     }
 }
-function CarregarMusica(){
+function CarregarMusica(nome){
     let source;
+    nome = String(nome)
     
-    if(this.textContent.includes('--')){
-        source = this.textContent.substring(0, this.textContent.indexOf('--')-1) + ".mp3"
+    if(nome == "[object PointerEvent]"){
+        if(this.textContent.includes('--')){
+            source = path + this.textContent.substring(0, this.textContent.indexOf('--')-1) + ".mp3"
+        }
+        else{
+            source = path + this.textContent + '.mp3'
+        }
     }
     else{
-        source = this.textContent + '.mp3'
-        
+        source = path + nome + '.mp3'
     }
+    
     console.log(source)
     musica.src = source
     musica.load()
@@ -181,15 +188,21 @@ function DefinirPlaylist(){
     const PlaylistsPossiveis = [playlist1, playlist2, playlist3]
     const posicaoPlaylist = Number(document.getElementById(this.id).textContent[9])-1
     let i = 0;
-    //aqui jaz o item do .txt
     PlaylistsPossiveis[posicaoPlaylist].map(DisplayPlaylist)
-    for(musiquinha of musicasFuncionais){
+    for(const musiquinha of musicasFuncionais){
         musiquinha.onclick = CarregarMusica
+        
     }
 }
 
-for(musiquinha of musicasFuncionais){
+for(const musiquinha of musicasFuncionais){
     musiquinha.onclick = CarregarMusica
+}
+
+for(const musiquinha of document.getElementsByClassName('recomendacao')){
+    musiquinha.onclick = function(){
+        CarregarMusica(musiquinha.children[1].textContent)
+    }
 }
 
 pause.onclick = Pausar
@@ -260,4 +273,8 @@ notificacao.onclick = function(){
         listaNotificacao.shift()
         document.getElementById("quantNotificacoes").textContent = `notificacoes: ${listaNotificacao.length}`
     }
+}
+
+document.getElementById('desconectar').onclick = function(){
+    window.location = "/login"
 }

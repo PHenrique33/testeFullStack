@@ -10,6 +10,26 @@ h6{
     font-size: 24px;
     margin: 5px 0px;
 }
+#Logout{
+    display: flex;
+    align-items: center;
+    justify-content: space-around;
+    height: 60px;
+    background-color: #7E5731;
+    margin-bottom: 20px;
+}
+.botaoFoda{
+    border-radius: 30px;
+    height: 100%;
+    width: 240px;
+    text-align: center;
+    font-size: 40px;
+    font-weight: 800;
+}
+.botaoFoda:hover{
+    background-color: #b17b45;
+    cursor: default
+}
 .bigthree{
     margin: 0.05%;
     margin-bottom: 100px;
@@ -44,15 +64,21 @@ h6{
     align-items: flex-start;
 }
 #pesquisa{
+    text-align: center;
+    font-weight: 900;
     width: 90%;
     height: 30px;
     background-color: #7E5731;
     border-radius: 30px;
     border: none;
 }
+.titulo{
+    height: 100%;
+    width: 100%;
+}
 #sugestoes{
     min-width: 90%;
-    transform: translateY(20px);
+    transform: translateY(30px);
     position: absolute;
     display: block;
     background-color: #ffffffd7;
