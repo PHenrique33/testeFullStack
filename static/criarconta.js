@@ -3,7 +3,6 @@ const contaCriada = document.createElement('p')
 document.getElementById('botao').onclick = function(){
     const Login = document.getElementById('login').value
     const Senha = document.getElementById('senha').value
-    console.log(Login, Senha)
     fetch("/criadorconta",{
         method: "POST",
 

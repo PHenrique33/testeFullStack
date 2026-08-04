@@ -14,36 +14,48 @@ const notificacao = document.getElementById("not1")
 const listaRecomendacao = document.getElementsByClassName("recomendacao")
 const path = "../static/musicas/"
 const musicasProvisorio = [
-    ["evidencias", "chitaozinho & xororo"],
-    ["tempo perdido", "legiao urbana"],
-    ["pais e filhos", "legiao urbana"],
-    ["anna julia", "los hermanos"],
-    ["malandragem", "cassia eller"],
-    ["o segundo sol", "cassia eller"],
-    ["garota nacional", "skank"],
-    ["vou deixar", "skank"],
-    ["dias melhores", "jota quest"],
-    ["facil", "jota quest"],
-    ["metamorfose ambulante", "raul seixas"],
-    ["maluco beleza", "raul seixas"],
-    ["asa branca", "luiz gonzaga"],
-    ["xote das meninas", "luiz gonzaga"],
-    ["ai se eu te pego", "michel telo"],
-    ["borbulhas de amor", "fagner"],
-    ["sozinho", "caetano veloso"],
-    ["aquarela", "toquinho"],
-    ["cheia de manias", "raca negra"],
-    ["e o amor", "zeze di camargo & luciano"],
-    ["sinonimos", "chitaozinho & xororo"],
-    ["cheirosa", "jorge & mateus"],
-    ["fio de cabelo", "chitaozinho & xororo"],
-    ["tocando em frente", "almir sater"],
-    ["o caderno", "toquinho"],
-    ["sina", "djavan", 'Certas coisas.mp3'],
-    ["flor e o beija-flor", "henrique & juliano, marilia mendonca"],
-    ["infiel", "marilia mendonca"],
-    ["a lua me traiu", "banda calypso"],
-    ["anna julia", "los hermanos"]
+    ["aguas de março", "elis regina & tom jobim"],
+    ["tocando em frente", "almir sater & renato teixeira"],
+    ["como nossos pais", "elis regina"],
+    ["o leaozinho", "caetano veloso"],
+    ["anunciaçao", "alceu valença"],
+    ["palco", "gilberto gil"],
+    ["sina", "djavan"],
+    ["partido alto", "chico buarque"]
+
+    ["tempo perdido", "legião urbana"],
+    ["pro dia nascer feliz", "barão vermelho"],
+    ["primeiros erros", "capital inicial"],
+    ["anna júlia", "los hermanos"],
+    ["dias de luta, dias de glória", "charlie brown jr."],
+    ["malandragem", "cássia eller"],
+    ["pais e filhos", "legião urbana"],
+    ["metamorfose ambulante", "raul seixas"]
+
+    ["evidências", "chitãozinho & xororó"],
+    ["fio de cabelo", "chitãozinho & xororó"],
+    ["boate azul", "joaquim & manuel"],
+    ["romaria", "renato teixeira"],
+    ["infiel", "marília mendonça"],
+    ["trevo (tu)", "anavitória & tiago iorc"]
+
+    ["cheia de manias", "raça negra"],
+    ["depois do prazer", "só pra contrariar"],
+    ["telegrama", "exaltasamba"],
+    ["livre pra voar", "art popular"],
+    ["temporal", "ferrugem"],
+    ["aquarela brasileira", "martinho da vila"],
+    ["trem das onze", "demônios da garoa"],
+    ["não deixe o samba morrer", "alcione"],
+    ["vou festejar", "beth carvalho"],
+    ["o show tem que continuar", "fundo de quintal"]
+
+    ["diário de um detento", "racionais mc's"],
+    ["vida loka, pt. 2", "racionais mc's"],
+    ["hoje cedo", "emicida"],
+    ["levanta e anda", "emicida"],
+    ["sulicídio", "baco exu do blues & diomedes chinaski"]
+
 ]
 const playlist1 = [
     ["sina", "djavan", 'Certas coisas.mp3'],
@@ -235,24 +247,31 @@ for(const playlistEscolhida of todasPlaylists){
 //barra de pesquisa (entender como funciona)
 pesquisa.oninput = function(){
     let i = 0;
-    if(document.getElementsByClassName('coco').length>0){
-        for(const buceta of document.getElementsByClassName('coco')){
-            buceta.innerHTML=""
+    if(document.getElementsByClassName('sugestaoMusica').length>0){
+        for(const musiquinha of document.getElementsByClassName('sugestaoMusica')){
+            musiquinha.innerHTML=""
         }
     }
     for(const item of musicasProvisorio){
         if(pesquisa.value == ""){
-            for (const tolete of document.getElementsByClassName('coco')){
-                tolete.textContent = ""
+            for (const musiquinha of document.getElementsByClassName('sugestaoMusica')){
+                musiquinha.textContent = ""
             }
         }
         else if(item[0].includes(pesquisa.value) || item[1].includes(pesquisa.value) && length){
             const sugestaoMusica = document.createElement('p')
-            sugestaoMusica.id = `coco${i}`
-            sugestaoMusica.classList="coco"
+            sugestaoMusica.id = `sugestaoMusica${i}`
+            sugestaoMusica.classList="sugestaoMusica"
             sugestaoMusica.innerHTML = `${item[0]}<br>${item[1]}`
             document.getElementById('sugestoes').appendChild(sugestaoMusica)
-            console.log(document.getElementById(`coco${i}`).id)
+            console.log(document.getElementById(`sugestaoMusica${i}`).id)
+        }
+        for(const Sugestao of document.getElementsByClassName('sugestaoMusica')){
+            Sugestao.onclick = function(){
+                console.log(Sugestao.innerHTML)
+                const argumento = Sugestao.innerHTML.substring[0, Sugestao.innerHTML.indexOf("<br>")]
+                console.log(argumento)
+            }
         }
         i++
     }    
