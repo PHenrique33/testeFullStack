@@ -30,6 +30,11 @@ h6{
     background-color: #b17b45;
     cursor: default
 }
+.sugestaoMusica:hover{
+    border-radius: 10px;
+    background-color: #9e9e9e;
+    cursor: default;
+}
 .bigthree{
     margin: 0.05%;
     margin-bottom: 100px;

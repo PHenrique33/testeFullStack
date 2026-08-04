@@ -26,8 +26,8 @@ const musicasProvisorio = [
     ["tempo perdido", "legião urbana"],
     ["pro dia nascer feliz", "barão vermelho"],
     ["primeiros erros", "capital inicial"],
-    ["anna júlia", "los hermanos"],
-    ["dias de luta, dias de glória", "charlie brown jr."],
+    ["anna julia", "los hermanos"],
+    ["dias de luta, dias de gloria", "charlie brown jr."],
     ["malandragem", "cássia eller"],
     ["pais e filhos", "legião urbana"],
     ["metamorfose ambulante", "raul seixas"]
@@ -58,7 +58,7 @@ const musicasProvisorio = [
 
 ]
 const playlist1 = [
-    ["sina", "djavan", 'Certas coisas.mp3'],
+    ["sina", "djavan"],
     ["flor e o beija-flor", "henrique & juliano, marilia mendonca"],
     ["infiel", "marilia mendonca"],
     ["certas coisas", "djavan"],
@@ -122,7 +122,6 @@ function Pausar(){
 function CarregarBarra(){
     document.getElementById("barra").max = musica.duration;
     document.getElementById("tempoTotal").textContent = formatarTempo(musica.duration);
-    console.log('aaaaaaaaaaaaa')
 }
 function formatarTempo(tempo){
     const minutos = Math.floor(tempo / 60)
@@ -174,26 +173,34 @@ function Curtir(){
         curtida = 0
     }
 }
-function CarregarMusica(nome){
+function CarregarMusica(nome, artista=undefined){
     let source;
+    console.log(artista)
     nome = String(nome)
     
     if(nome == "[object PointerEvent]"){
         if(this.textContent.includes('--')){
             source = path + this.textContent.substring(0, this.textContent.indexOf('--')-1) + ".mp3"
+            document.getElementById("nomedamusica").innerHTML = this.textContent.substring(0, this.textContent.indexOf('--')-1)
+            document.getElementById("nomedoartista").innerHTML = this.textContent.substring(this.textContent.indexOf('--')+3, this.textContent.length)
         }
         else{
             source = path + this.textContent + '.mp3'
+            document.getElementById("nomedamusica").innerHTML = this.textContent
+            console.log(this.textContent + "aaaaaaaa")
         }
     }
     else{
         source = path + nome + '.mp3'
+        document.getElementById("nomedamusica").innerHTML = nome
+        document.getElementById("nomedoartista").innerHTML = artista
     }
-    
+
     console.log(source)
     musica.src = source
     musica.load()
-    musica.play().catch(console.log('deu erro fiote'));
+    musica.play()
+    AtualizarBarra
 }
 function DefinirPlaylist(){
     document.getElementById('playlistAtual').innerHTML = ""
@@ -206,14 +213,46 @@ function DefinirPlaylist(){
         
     }
 }
-
-for(const musiquinha of musicasFuncionais){
-    musiquinha.onclick = CarregarMusica
+ function pesquisar(){
+    let i = 0;
+    if(document.getElementsByClassName('sugestaoMusica').length>0){
+        for(const musiquinha of document.getElementsByClassName('sugestaoMusica')){
+            musiquinha.innerHTML=""
+        }
+    }
+    for(const item of musicasProvisorio){
+        if(pesquisa.value == ""){
+            for (const musiquinha of document.getElementsByClassName('sugestaoMusica')){
+                musiquinha.textContent = ""
+            }
+        }
+        else if(item[0].includes(pesquisa.value) || item[1].includes(pesquisa.value)){
+            const sugestaoMusica = document.createElement('p')
+            sugestaoMusica.id = `sugestaoMusica${i}`
+            sugestaoMusica.classList="sugestaoMusica"
+            sugestaoMusica.innerHTML = `${item[0]}<br>${item[1]}`
+            document.getElementById('sugestoes').appendChild(sugestaoMusica)
+            console.log(document.getElementById(`sugestaoMusica${i}`).id)
+        }
+        for(const Sugestao of document.getElementsByClassName('sugestaoMusica')){
+            Sugestao.onclick = function(){
+                const argumento = Sugestao.innerHTML.substring(0, Sugestao.innerHTML.indexOf("<br>"))
+                const argumentoArtista = Sugestao.innerHTML.substring(Sugestao.innerHTML.indexOf("<br>")+4, Sugestao.length)
+                CarregarMusica(argumento, argumentoArtista)
+                for(const musiquinha of document.getElementsByClassName('sugestaoMusica')){
+                    musiquinha.innerHTML=""
+                }
+            }
+        }
+        i++
+    }    
 }
+
 
 for(const musiquinha of document.getElementsByClassName('recomendacao')){
     musiquinha.onclick = function(){
-        CarregarMusica(musiquinha.children[1].textContent)
+        CarregarMusica(musiquinha.children[1].textContent, musiquinha.children[2])
+        
     }
 }
 
@@ -245,37 +284,7 @@ for(const playlistEscolhida of todasPlaylists){
 
 
 //barra de pesquisa (entender como funciona)
-pesquisa.oninput = function(){
-    let i = 0;
-    if(document.getElementsByClassName('sugestaoMusica').length>0){
-        for(const musiquinha of document.getElementsByClassName('sugestaoMusica')){
-            musiquinha.innerHTML=""
-        }
-    }
-    for(const item of musicasProvisorio){
-        if(pesquisa.value == ""){
-            for (const musiquinha of document.getElementsByClassName('sugestaoMusica')){
-                musiquinha.textContent = ""
-            }
-        }
-        else if(item[0].includes(pesquisa.value) || item[1].includes(pesquisa.value) && length){
-            const sugestaoMusica = document.createElement('p')
-            sugestaoMusica.id = `sugestaoMusica${i}`
-            sugestaoMusica.classList="sugestaoMusica"
-            sugestaoMusica.innerHTML = `${item[0]}<br>${item[1]}`
-            document.getElementById('sugestoes').appendChild(sugestaoMusica)
-            console.log(document.getElementById(`sugestaoMusica${i}`).id)
-        }
-        for(const Sugestao of document.getElementsByClassName('sugestaoMusica')){
-            Sugestao.onclick = function(){
-                console.log(Sugestao.innerHTML)
-                const argumento = Sugestao.innerHTML.substring[0, Sugestao.innerHTML.indexOf("<br>")]
-                console.log(argumento)
-            }
-        }
-        i++
-    }    
-}
+pesquisa.oninput = pesquisar
 
 //notificações
 //texto inicial + total de notificações
