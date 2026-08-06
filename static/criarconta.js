@@ -15,14 +15,17 @@ document.getElementById('botao').onclick = function(){
           senha: Senha  
         }) 
     })
-    .then(
-        contaCriada.innerHTML = "redirecionando para login...",
-        document.getElementById('container').appendChild(contaCriada)
-    )
-    .then(resposta => resposta.json())
-    .then(
-        window.location = "/login"
-    )
+    .then((resposta) => {
+        return resposta.json();
+    })
+    .then((dados) => {
+        if(dados.CriarConta === "valido"){
+            window.location = "/login"
+        }
+        else{
+            window.alert('campo invalido ou nome já existente, tente novamente')
+        }
+    });
 }
 document.getElementById('possuoConta').onclick = function(){
     window.location = "/login"

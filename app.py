@@ -15,19 +15,6 @@ def StartSQLite3():
                 nome TEXT NOT NULL,
                 artista TEXT NOT NULL,
                 caminho TEXT NOT NULL)''')
-
-    cursor.execute('''CREATE TABLE IF NOT EXISTS playlist1 (
-                id INTEGER PRIMARY KEY AUTOINCREMENT,
-                nome TEXT NOT NULL,
-                artista TEXT NOT NULL,
-                caminho TEXT NOT NULL)''')
-
-    cursor.execute('''CREATE TABLE IF NOT EXISTS playlist2 (
-                id INTEGER PRIMARY KEY AUTOINCREMENT,
-                nome TEXT NOT NULL,
-                artista TEXT NOT NULL,
-                caminho TEXT NOT NULL)''')
-
     
 def salvarLogin(nome, senha):
     # StartSQLite3()
@@ -37,11 +24,12 @@ def salvarLogin(nome, senha):
                    VALUES (?, ?)''', (nome, senha))
     conexao.commit()
 
+StartSQLite3()
 app = Flask(__name__)
 
 @app.route('/')
 def inicio():
-    return redirect(url_for('criarconta'))
+    return redirect(url_for('login'))
 
 @app.route("/criarconta")
 def criarconta():
@@ -57,22 +45,29 @@ def ueplaylist():
 
 @app.route("/criadorconta", methods = ["POST"])
 def criadorconta():
+    conexao = sqlite3.connect('app.db')
+    cursor = conexao.cursor()
     Json = request.get_json()
     txtLogin = Json['login']
     txtSenha = Json['senha']
+    usuarioexistente = cursor.execute("SELECT * FROM login WHERE nome = ?",(txtLogin,)).fetchall()
     if txtSenha == "" or txtLogin == "":
         return jsonify({
-            "Criar conta": "invaliddo"
+            "CriarConta": "invalido, nome ou senha vazio"
+        })
+    elif usuarioexistente != []:
+        return jsonify({
+            "CriarConta": "invalido, nome de usuario ja existe"
         })
     else:
         salvarLogin(txtLogin, txtSenha)
         return jsonify({
-            'Criar conta': "valido",
-            'Login': txtLogin,
+            'CriarConta': "valido",
+            'Login': txtLogin, 
             'Senha': txtSenha
     })
 
-@app.route("/checarlogin", methods = ["POST"])
+@app.route("/checarlogin", methods = ["POST"]) 
 def checarlogin():
     Json = request.get_json()
     txtLogin = Json['login']
@@ -84,9 +79,25 @@ def checarlogin():
     if usuario == None:
         return jsonify({"resposta":"invalido"})
     elif txtSenha==usuario[2]:
+        cursor.execute(f''' CREATE TABLE IF NOT EXISTS {txtLogin} (
+                id INTEGER PRIMARY KEY AUTOINCREMENT,
+                playlist INTEGER NOT NULL,
+                musica TEXT NOT NULL,
+                artista TEXT NOT NULL,
+                caminho TEXT NOT NULL)''')
         return jsonify({"resposta":"valido"})
     else:
         return jsonify({"resposta":"invalido"})
+    
+@app.route("/adicionarPlaylist", methods = ["POST"])
+def adicionarPlaylist():
+    Json = request.get_json()
+    playlist = Json['playlist']
+    musica = Json['musica']
+    artista = Json['artista']
+    caminho = Json['caminho']
+    return jsonify({"resposta":"Playlist adicionada com sucesso"})
+    # criar função pra criar playlist e salvar o nome do login para passar pra UEPlaylists
 
 if __name__ == "__main__":
     app.run(debug=True)

@@ -153,7 +153,21 @@ function AdicionarPlaylist(){
     }
 }
 function SelecionarPlaylist(){
-    console.log(`voce selecionou ${this.id}`)
+    console.log(`${this.id[13]-1}`)
+    fetch("/adicionarPlaylist"),{
+        method: "POST",
+
+        headers: {
+            "Content-Type": "application/json"
+        },
+        body: {
+            playlist: `${this.id[13]-1}`,
+            musica: musica.src.textContent.substring(musica.src.textContent.length - 4),
+            artista: document.getElementById('nomedoartista').textContent,
+            caminho: musica.src
+        }
+
+    }
     document.getElementById('popup').style.display="none"
 }
 function Curtir(){
@@ -206,7 +220,6 @@ function DefinirPlaylist(){
     document.getElementById('playlistAtual').innerHTML = ""
     const PlaylistsPossiveis = [playlist1, playlist2, playlist3]
     const posicaoPlaylist = Number(document.getElementById(this.id).textContent[9])-1
-    let i = 0;
     PlaylistsPossiveis[posicaoPlaylist].map(DisplayPlaylist)
     for(const musiquinha of musicasFuncionais){
         musiquinha.onclick = CarregarMusica
@@ -251,7 +264,7 @@ function DefinirPlaylist(){
 
 for(const musiquinha of document.getElementsByClassName('recomendacao')){
     musiquinha.onclick = function(){
-        CarregarMusica(musiquinha.children[1].textContent, musiquinha.children[2])
+        CarregarMusica(musiquinha.children[1].textContent, musiquinha.children[2].textContent)
         
     }
 }
