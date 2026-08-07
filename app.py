@@ -9,13 +9,24 @@ def StartSQLite3():
                 id INTEGER PRIMARY KEY AUTOINCREMENT,
                 nome TEXT NOT NULL,
                 senha TEXT NOT NULL)''')
-    
+
     cursor.execute(''' CREATE TABLE IF NOT EXISTS musicas (
                 id INTEGER PRIMARY KEY AUTOINCREMENT,
                 nome TEXT NOT NULL,
                 artista TEXT NOT NULL,
                 caminho TEXT NOT NULL)''')
+
+def criarPlaylist()                      # cria uma playlist pra cada usuario
+    cursor.execute('''SELECT * FROM login WHERE nome = ?''', (nome))
+    usuarioExistente = cursor.fetchall()                  # pega todos os usuarios da tabela login
+    for usuario in usuarioExistente:
+        cursor.execute(f'''CREATE TABLE IF NOT EXISTS "{usuario}" (
+                        playlist INTEGER NOT NULL,
+                        nomeMusica TEXT NOT NULL,
+                        nomeArtista TEXT NOT NULL,
+                        urlImagem TEXT NOT NULL)''')      # cria uma tabela com o nome do usuário pra cada usuário
     
+
 def salvarLogin(nome, senha):
     # StartSQLite3()
     conexao = sqlite3.connect('app.db')
