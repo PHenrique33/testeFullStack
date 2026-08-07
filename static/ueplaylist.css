@@ -142,6 +142,34 @@ h6{
     background-color: #FFD8B3;
     transform: translateY(10px);
 }
+#GabrielAI{
+    display: inline-block;
+    justify-content: center;
+    min-height: 300px;
+    overflow: hidden;
+    width: 70%;
+    background-color: #FFD8B3;
+    transform: translateY(10px);
+}
+#KezIA{
+    transform: translate(33%);
+    display: flex;
+}
+#botao2{
+    height: 50px;
+    width: 50px;
+    transform: translate(50px, 10px);
+    border-radius: 50%;
+}
+#texto{
+    max-height: 300px    ;
+    width: 90%;
+    transform: translate(5%, -10px);
+    background-color: #7E5731;
+    justify-content: center;
+    display: flex;
+    overflow: auto;
+}
 .notificacao{
     text-align: center;
     color: blueviolet;
@@ -255,9 +283,8 @@ hr{
     flex-wrap: wrap;
     display: flex;
     justify-content: center;
-
-    
 }
+
 .comandos{
     min-width: 5%;
     min-height: 5%;

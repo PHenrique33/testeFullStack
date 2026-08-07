@@ -110,9 +110,7 @@ def adicionarPlaylist():
     artista = Json['artista']
     caminho = Json['caminho']
     check = cursor.execute(f"SELECT * FROM {usuarioAtivo} WHERE musica = ?",(musica,)).fetchone()
-    print(check, "aaaaaaaaaaaaa")
     if check == None:
-        print('aaaaaaaaaaaaaaaaaaaaaaaaa')
         salvarPlaylist(playlist, musica, artista, caminho)
         return jsonify(
             {"resposta": "Playlist adicionada com sucesso"},
@@ -128,7 +126,6 @@ def AtualizarPlaylist():
     cursor = conexao.cursor()
     cursor.execute(f"SELECT * FROM {usuarioAtivo}")
     musicas = cursor.fetchall()
-    print(musicas)
     return(musicas)
 
 

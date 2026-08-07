@@ -20,10 +20,11 @@ def criar_tabela():
     conn.execute("""
         CREATE TABLE IF NOT EXISTS musicas (
             id INTEGER PRIMARY KEY AUTOINCREMENT,
-            titulo TEXT NOT NULL,
+            nome TEXT NOT NULL,
             artista TEXT NOT NULL,
-            album TEXT,
-            ano INTEGER
+            caminho TEXT NOT NULL,
+            genero TEXT,
+            url TEXT
         )
     """)
 
@@ -50,7 +51,7 @@ def buscar_musica(id):
 
     musica = conn.execute(
         "SELECT * FROM musicas WHERE id = ?",
-        (id,)
+        (id,)   
     ).fetchone()
 
     conn.close()
@@ -68,22 +69,23 @@ def criar_musica():
     if not dados:
         return jsonify({"erro": "JSON inválido"}), 400
 
-    titulo = dados.get("titulo")
+    nome = dados.get("nome")
     artista = dados.get("artista")
-    album = dados.get("album")
-    ano = dados.get("ano")
+    caminho = dados.get("caminho")
+    genero = dados.get("genero")
+    url = dados.get("url")
 
-    if not titulo or not artista:
+    if not nome or not artista or not caminho:
         return jsonify({
-            "erro": "Título e artista são obrigatórios"
+            "erro": "Nome, artista e caminho são obrigatórios"
         }), 400
 
     conn = conectar_banco()
 
     cursor = conn.execute("""
-        INSERT INTO musicas (titulo, artista, album, ano)
-        VALUES (?, ?, ?, ?)
-    """, (titulo, artista, album, ano))
+        INSERT INTO musicas (nome, artista, caminho, genero, url)
+        VALUES (?, ?, ?, ?, ?)
+    """, (nome, artista, caminho, genero, url))
 
     conn.commit()
 
@@ -115,16 +117,17 @@ def atualizar_musica(id):
         conn.close()
         return jsonify({"erro": "Música não encontrada"}), 404
 
-    titulo = dados.get("titulo", musica["titulo"])
+    nome = dados.get("nome", musica["nome"])
     artista = dados.get("artista", musica["artista"])
-    album = dados.get("album", musica["album"])
-    ano = dados.get("ano", musica["ano"])
+    caminho = dados.get("caminho", musica["caminho"])
+    genero = dados.get("genero", musica["genero"])
+    url = dados.get("url", musica["url"])
 
     conn.execute("""
         UPDATE musicas
-        SET titulo = ?, artista = ?, album = ?, ano = ?
+        SET nome = ?, artista = ?, caminho = ?, genero = ?, url = ?
         WHERE id = ?
-    """, (titulo, artista, album, ano, id))
+    """, (nome, artista, caminho, genero, url, id))
 
     conn.commit()
     conn.close()

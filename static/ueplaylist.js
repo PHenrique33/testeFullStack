@@ -55,15 +55,26 @@ const musicasProvisorio = [
     ["hoje cedo", "emicida"],
     ["levanta e anda", "emicida"],
     ["sulicídio", "baco exu do blues & diomedes chinaski"]
-]
-
+];
+const playlist0 = [];
 const playlist1 = [];
 const playlist2 = [];
 const playlist3 = []; 
-const playlists = [playlist1, playlist2, playlist3]
+const playlists = [playlist0, playlist1, playlist2, playlist3]
 
 
 
+
+
+function AtualizarRecomendacao(){
+    for(const recomendacao of listaRecomendacao){
+        const aleatorio = Math.floor(Math.random()*40)
+        recomendacao.children[1].innerHTML = musicasProvisorio[aleatorio][0]
+        recomendacao.children[2].innerHTML = musicasProvisorio[aleatorio][1]
+        console.log(recomendacao)
+    }
+}
+AtualizarRecomendacao()
 
 
 
@@ -89,6 +100,7 @@ function formatarTempo(tempo){
 function CarregarBarra(){
     document.getElementById("barra").max = musica.duration;
     document.getElementById("tempoTotal").textContent = formatarTempo(musica.duration);
+    AtualizarRecomendacao()
 }
 function AtualizarBarra(){
     document.getElementById("barra").value = musica.currentTime;
@@ -97,6 +109,9 @@ function AtualizarBarra(){
 function ModificarBarra(){
     musica.currentTime = document.getElementById("barra").value
 }
+
+
+
 function AtualizarPlaylist(){
     fetch("/AtualizarPlaylist")
     .then(resposta => resposta.json())
@@ -105,6 +120,9 @@ function AtualizarPlaylist(){
             console.log(item)
             const conjunto = [item[2], item[3]]
             switch(item[1]){
+                case 0:
+                    playlist0.unshift(conjunto)
+                    break
                 case 1:
                     playlist1.unshift(conjunto)
                     break
@@ -116,11 +134,12 @@ function AtualizarPlaylist(){
                     break
             }
         }
+        console.log(playlist0)
+        console.log(playlist1)
+        console.log(playlist2)
+        console.log(playlist3)
     })
 }
-
-
-AtualizarPlaylist()
 function ChecarPlaylist(){
     if (playlist==0){
         document.getElementById('addplaylist').classList = ""
@@ -179,12 +198,17 @@ function SelecionarPlaylist(){
 }
 function DefinirPlaylist(){
     document.getElementById('playlistAtual').innerHTML = ""
-    const posicaoPlaylist = Number(document.getElementById(this.id).textContent[9])-1
+    const posicaoPlaylist = Number(this.id[8])
+    console.log((this.id[8]))
     playlists[posicaoPlaylist].map(DisplayPlaylist)
     for(const musiquinha of musicasFuncionais){
         musiquinha.onclick = CarregarMusica        
     }
 }
+
+AtualizarPlaylist()
+
+
 function ChecarCurtida(){
     if(curtida==1){
         document.getElementById('coracao').classList.remove(...document.getElementById('coracao').classList)
@@ -202,10 +226,24 @@ function Curtir(){
         window.alert('nenhuma musica selecionada')
     }
     else if (curtida==0){
+        curtida = 1
         document.getElementById('coracao').classList.remove(...["fa-regular", "fa-heart", "fa-3x"])
         document.getElementById('coracao').classList.add(...["fa-solid", "fa-heart", "fa-3x"])
         window.alert('voce curtiu essa musica')
-        curtida = 1
+        fetch("/adicionarPlaylist",{
+        method: "POST",
+
+        headers: {
+            "Content-Type": "application/json"
+        },
+        body: JSON.stringify({
+            playlist: `0`,
+            musica: document.getElementById('nomedamusica').textContent,
+            artista: document.getElementById('nomedoartista').textContent,
+            caminho: path + document.getElementById('nomedamusica').textContent + ".mp3"
+        })
+    })
+    .then(AtualizarPlaylist)
     }
     else if(curtida==1){
         document.getElementById('coracao').classList.remove(...["fa-solid", "fa-heart", "fa-3x"])
@@ -214,6 +252,8 @@ function Curtir(){
         curtida = 0
     }
 }
+
+
 function CarregarMusica(nome, artista=undefined){
     let source;
     console.log(artista)
@@ -278,7 +318,7 @@ function pesquisar(){
     }    
 }
 
-for(const musiquinha of document.getElementsByClassName('recomendacao')){
+for(const musiquinha of listaRecomendacao){
     musiquinha.onclick = function(){
         CarregarMusica(musiquinha.children[1].textContent, musiquinha.children[2].textContent)
         
