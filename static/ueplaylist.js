@@ -21,7 +21,7 @@ const musicasProvisorio = [
     ["anunciaçao", "alceu valença"],
     ["palco", "gilberto gil"],
     ["sina", "djavan"],
-    ["partido alto", "chico buarque"]
+    ["partido alto", "chico buarque"],
 
     ["tempo perdido", "legião urbana"],
     ["pro dia nascer feliz", "barão vermelho"],
@@ -30,14 +30,14 @@ const musicasProvisorio = [
     ["dias de luta, dias de gloria", "charlie brown jr."],
     ["malandragem", "cássia eller"],
     ["pais e filhos", "legião urbana"],
-    ["metamorfose ambulante", "raul seixas"]
+    ["metamorfose ambulante", "raul seixas"],
 
-    ["evidências", "chitãozinho & xororó"],
+    ["evidencias", "chitãozinho & xororó"],
     ["fio de cabelo", "chitãozinho & xororó"],
     ["boate azul", "joaquim & manuel"],
     ["romaria", "renato teixeira"],
     ["infiel", "marília mendonça"],
-    ["trevo (tu)", "anavitória & tiago iorc"]
+    ["trevo (tu)", "anavitória & tiago iorc"],
 
     ["cheia de manias", "raça negra"],
     ["depois do prazer", "só pra contrariar"],
@@ -48,63 +48,25 @@ const musicasProvisorio = [
     ["trem das onze", "demônios da garoa"],
     ["não deixe o samba morrer", "alcione"],
     ["vou festejar", "beth carvalho"],
-    ["o show tem que continuar", "fundo de quintal"]
+    ["o show tem que continuar", "fundo de quintal"],
 
     ["diário de um detento", "racionais mc's"],
     ["vida loka, pt. 2", "racionais mc's"],
     ["hoje cedo", "emicida"],
     ["levanta e anda", "emicida"],
     ["sulicídio", "baco exu do blues & diomedes chinaski"]
-
-]
-const playlist1 = [
-    ["sina", "djavan"],
-    ["flor e o beija-flor", "henrique & juliano, marilia mendonca"],
-    ["infiel", "marilia mendonca"],
-    ["certas coisas", "djavan"],
-    ["anna julia", "los hermanos"]
-]
-const playlist2 = [  
-    ["pais e filhos", "legiao urbana"],
-    ["anna julia", "los hermanos"],
-    ["malandragem", "cassia eller"],
-    ["o segundo sol", "cassia eller"],
-    ["garota nacional", "skank"],
-    ["vou deixar", "skank"],
-    ["dias melhores", "jota quest"],
-    ["facil", "jota quest"],
-    ["metamorfose ambulante", "raul seixas"],
-    ["maluco beleza", "raul seixas"],
-    ["asa branca", "luiz gonzaga"],
-    ["xote das meninas", "luiz gonzaga"],
-    ["ai se eu te pego", "michel telo"],
-    ["borbulhas de amor", "fagner"],
-    ["sozinho", "caetano veloso"],
-    ["aquarela", "toquinho"],
-    ["cheia de manias", "raca negra"],
-    ["e o amor", "zeze di camargo & luciano"],
-    ["sinonimos", "chitaozinho & xororo"],
-    ["cheirosa", "jorge & mateus"],
-    ["fio de cabelo", "chitaozinho & xororo"],
-    ["tocando em frente", "almir sater"],
-    ["o caderno", "toquinho"]
-]
-const playlist3 = [
-    ["evidencias", "chitaozinho & xororo"],
-    ["tempo perdido", "legiao urbana"]
 ]
 
+const playlist1 = [];
+const playlist2 = [];
+const playlist3 = []; 
+const playlists = [playlist1, playlist2, playlist3]
 
-function DisplayPlaylist(musica){
-    let i = 0
-    const songs = document.createElement('p')
-    songs.innerHTML = `${musica[0]} <br>-- ${musica[1]}`
-    songs.className = "songs musicasFuncionais"
-    songs.id = `songPlaylist${i}`
-    document.getElementById('playlistAtual').appendChild(songs)
-    i++
-    
-}
+
+
+
+
+
 function Pausar(){
     if(tocando == 1){
         musica.pause()
@@ -119,14 +81,14 @@ function Pausar(){
         document.getElementById('botaoPause').classList.add(...["fa-solid", "fa-pause", "fa-3x"])
     }
 }
-function CarregarBarra(){
-    document.getElementById("barra").max = musica.duration;
-    document.getElementById("tempoTotal").textContent = formatarTempo(musica.duration);
-}
 function formatarTempo(tempo){
     const minutos = Math.floor(tempo / 60)
      const segundos = Math.floor(tempo % 60)
     return `${minutos}:${segundos.toString().padStart(2, '0')}` 
+}
+function CarregarBarra(){
+    document.getElementById("barra").max = musica.duration;
+    document.getElementById("tempoTotal").textContent = formatarTempo(musica.duration);
 }
 function AtualizarBarra(){
     document.getElementById("barra").value = musica.currentTime;
@@ -134,6 +96,50 @@ function AtualizarBarra(){
 } 
 function ModificarBarra(){
     musica.currentTime = document.getElementById("barra").value
+}
+function AtualizarPlaylist(){
+    fetch("/AtualizarPlaylist")
+    .then(resposta => resposta.json())
+    .then(dados => {
+        for(item of dados){
+            console.log(item)
+            const conjunto = [item[2], item[3]]
+            switch(item[1]){
+                case 1:
+                    playlist1.unshift(conjunto)
+                    break
+                case 2:
+                    playlist2.unshift(conjunto)
+                    break
+                case 3:
+                    playlist3.unshift(conjunto)
+                    break
+            }
+        }
+    })
+}
+
+
+AtualizarPlaylist()
+function ChecarPlaylist(){
+    if (playlist==0){
+        document.getElementById('addplaylist').classList = ""
+        document.getElementById('addplaylist').classList.add(...["fa-solid", "fa-square-plus", "fa-3x"])
+    }
+    else if(playlist==1){
+        document.getElementById('addplaylist').classList = ""
+        document.getElementById('addplaylist').classList.add(...["fa-regular", "fa-square-plus", "fa-3x"])
+    }
+}
+function DisplayPlaylist(musica){
+    let i = 0
+    const songs = document.createElement('p')
+    songs.innerHTML = `${musica[0]} <br>-- ${musica[1]}`
+    songs.className = "songs musicasFuncionais"
+    songs.id = `songPlaylist${i}`
+    document.getElementById('playlistAtual').appendChild(songs)
+    i++
+    
 }
 function AdicionarPlaylist(){
     if(musica.src==""){
@@ -153,22 +159,43 @@ function AdicionarPlaylist(){
     }
 }
 function SelecionarPlaylist(){
-    console.log(`${this.id[13]-1}`)
-    fetch("/adicionarPlaylist"),{
+    console.log(`${this.id[13]}`)
+    fetch("/adicionarPlaylist",{
         method: "POST",
 
         headers: {
             "Content-Type": "application/json"
         },
-        body: {
-            playlist: `${this.id[13]-1}`,
-            musica: musica.src.textContent.substring(musica.src.textContent.length - 4),
+        body: JSON.stringify({
+            playlist: `${this.id[13]}`,
+            musica: document.getElementById('nomedamusica').textContent,
             artista: document.getElementById('nomedoartista').textContent,
-            caminho: musica.src
-        }
-
+            caminho: path + document.getElementById('nomedamusica').textContent + ".mp3"
+        })
+    })
+    .then(document.getElementById('popup').style.display="none")
+    .then(AtualizarPlaylist)
+    
+}
+function DefinirPlaylist(){
+    document.getElementById('playlistAtual').innerHTML = ""
+    const posicaoPlaylist = Number(document.getElementById(this.id).textContent[9])-1
+    playlists[posicaoPlaylist].map(DisplayPlaylist)
+    for(const musiquinha of musicasFuncionais){
+        musiquinha.onclick = CarregarMusica        
     }
-    document.getElementById('popup').style.display="none"
+}
+function ChecarCurtida(){
+    if(curtida==1){
+        document.getElementById('coracao').classList.remove(...document.getElementById('coracao').classList)
+        document.getElementById('coracao').classList.add(...["fa-solid", "fa-heart", "fa-3x"])
+        window.alert('voce curtiu essa musica')
+        curtida = 1
+    }
+    else if(curtida==0){
+        document.getElementById('coracao').classList.remove(...document.getElementById('coracao').classList)
+        document.getElementById('coracao').classList.add(...["fa-regular", "fa-heart", "fa-3x"])
+    }
 }
 function Curtir(){
     if(musica.src==""){
@@ -216,17 +243,7 @@ function CarregarMusica(nome, artista=undefined){
     musica.play()
     AtualizarBarra
 }
-function DefinirPlaylist(){
-    document.getElementById('playlistAtual').innerHTML = ""
-    const PlaylistsPossiveis = [playlist1, playlist2, playlist3]
-    const posicaoPlaylist = Number(document.getElementById(this.id).textContent[9])-1
-    PlaylistsPossiveis[posicaoPlaylist].map(DisplayPlaylist)
-    for(const musiquinha of musicasFuncionais){
-        musiquinha.onclick = CarregarMusica
-        
-    }
-}
- function pesquisar(){
+function pesquisar(){
     let i = 0;
     if(document.getElementsByClassName('sugestaoMusica').length>0){
         for(const musiquinha of document.getElementsByClassName('sugestaoMusica')){
@@ -260,7 +277,6 @@ function DefinirPlaylist(){
         i++
     }    
 }
-
 
 for(const musiquinha of document.getElementsByClassName('recomendacao')){
     musiquinha.onclick = function(){

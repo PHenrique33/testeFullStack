@@ -15,9 +15,7 @@ document.getElementById('botao').onclick = function(){
           senha: Senha  
         }) 
     })
-    .then((resposta) => {
-        return resposta.json();
-    })
+    .then((resposta) => resposta.json())
     .then((dados) => {
         if(dados.CriarConta === "valido"){
             window.location = "/login"

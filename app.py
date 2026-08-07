@@ -24,8 +24,16 @@ def salvarLogin(nome, senha):
                    VALUES (?, ?)''', (nome, senha))
     conexao.commit()
 
+def salvarPlaylist(playlist, musica, artista, caminho):
+    conexao = sqlite3.connect('app.db')
+    cursor = conexao.cursor()
+    cursor.execute(f'''INSERT INTO {usuarioAtivo} (playlist, musica, artista, caminho)
+                    VALUES (?, ?, ?, ?)''', (playlist, musica, artista, caminho))
+    conexao.commit()
+
 StartSQLite3()
 app = Flask(__name__)
+usuarioAtivo = ""
 
 @app.route('/')
 def inicio():
@@ -41,6 +49,7 @@ def login():
 
 @app.route("/ueplaylist")
 def ueplaylist():
+    print(usuarioAtivo)
     return render_template("ueplaylist.html")
 
 @app.route("/criadorconta", methods = ["POST"])
@@ -75,10 +84,12 @@ def checarlogin():
     conexao = sqlite3.connect('app.db')
     cursor = conexao.cursor()
     usuario = cursor.execute("SELECT * FROM login WHERE nome = ?",(txtLogin,)).fetchone()
-    print(usuario)
+
     if usuario == None:
         return jsonify({"resposta":"invalido"})
     elif txtSenha==usuario[2]:
+        global usuarioAtivo
+        usuarioAtivo = txtLogin
         cursor.execute(f''' CREATE TABLE IF NOT EXISTS {txtLogin} (
                 id INTEGER PRIMARY KEY AUTOINCREMENT,
                 playlist INTEGER NOT NULL,
@@ -91,13 +102,35 @@ def checarlogin():
     
 @app.route("/adicionarPlaylist", methods = ["POST"])
 def adicionarPlaylist():
+    conexao = sqlite3.connect('app.db')
+    cursor = conexao.cursor()
     Json = request.get_json()
     playlist = Json['playlist']
     musica = Json['musica']
     artista = Json['artista']
     caminho = Json['caminho']
-    return jsonify({"resposta":"Playlist adicionada com sucesso"})
-    # criar função pra criar playlist e salvar o nome do login para passar pra UEPlaylists
+    check = cursor.execute(f"SELECT * FROM {usuarioAtivo} WHERE musica = ?",(musica,)).fetchone()
+    print(check, "aaaaaaaaaaaaa")
+    if check == None:
+        print('aaaaaaaaaaaaaaaaaaaaaaaaa')
+        salvarPlaylist(playlist, musica, artista, caminho)
+        return jsonify(
+            {"resposta": "Playlist adicionada com sucesso"},
+            {"playlist": playlist})
+    else:
+        
+        return jsonify(
+            {"resposta": "0"})
+
+@app.route("/AtualizarPlaylist")
+def AtualizarPlaylist():
+    conexao = sqlite3.connect('app.db')
+    cursor = conexao.cursor()
+    cursor.execute(f"SELECT * FROM {usuarioAtivo}")
+    musicas = cursor.fetchall()
+    print(musicas)
+    return(musicas)
+
 
 if __name__ == "__main__":
     app.run(debug=True)
