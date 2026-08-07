@@ -68,13 +68,31 @@ const playlists = [playlist0, playlist1, playlist2, playlist3]
 
 function AtualizarRecomendacao(){
     for(const recomendacao of listaRecomendacao){
-        const aleatorio = Math.floor(Math.random()*40)
+        const aleatorio = Math.floor(Math.random()*36)
+        console.log(aleatorio)
         recomendacao.children[1].innerHTML = musicasProvisorio[aleatorio][0]
         recomendacao.children[2].innerHTML = musicasProvisorio[aleatorio][1]
         console.log(recomendacao)
     }
 }
 AtualizarRecomendacao()
+
+
+
+function AtualizarBiblioteca(){
+    document.getElementById("musica-3").textContent = document.getElementById("musica-2").textContent
+    document.getElementById("musica-2").textContent = document.getElementById("musica-1").textContent
+    document.getElementById("musica-1").textContent = document.getElementById("nomedamusica").textContent
+}
+for(const musiquinha of document.getElementsByClassName("historico")){
+    musiquinha.onclick = function(){
+        const cantor = new Map(musicasProvisorio).get(musiquinha.textContent)
+        console.log(musiquinha.textContent)
+        console.log(cantor)
+        CarregarMusica(musiquinha.textContent, cantor)
+        
+    }
+}
 
 
 
@@ -101,6 +119,7 @@ function CarregarBarra(){
     document.getElementById("barra").max = musica.duration;
     document.getElementById("tempoTotal").textContent = formatarTempo(musica.duration);
     AtualizarRecomendacao()
+    AtualizarBiblioteca()
 }
 function AtualizarBarra(){
     document.getElementById("barra").value = musica.currentTime;
