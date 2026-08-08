@@ -1,18 +1,27 @@
+const path = "../static/musicas/"
+
 const musica = document.getElementById('musica');
+const pauseDiv = document.getElementById('pauseDiv');
+const controleBarra = document.getElementById("barra")
+const curtidaDiv = document.getElementById('curtidaDiv');
+const playlistDiv = document.getElementById('playlistDiv');
+const Desconectar = document.getElementById('desconectar');
+const pesquisa = document.getElementById('pesquisa');
+const notificacao = document.getElementById("not1")
+
+
+
+
 const musicasFuncionais = document.getElementsByClassName('musicasFuncionais');
 const todasPlaylists = document.getElementsByClassName('playlist')
-const pause = document.getElementById('pause') ;
-const pesquisa = document.getElementById('pesquisa')
 const sugestoes = document.getElementsByClassName('sugestoes')
-const cancao = document.getElementsByClassName('cancao')
-const cantor = document.getElementsByClassName('cantor')
+
 let tocando = 0;
 let curtida = 0;
 let playlist = 0;
+
 const listaNotificacao = ['mensagem 1', ' notificacao comicamente grande pra ver se cabe na barrinha de notificacao oi olá', 'mensagem 3']
-const notificacao = document.getElementById("not1")
 const listaRecomendacao = document.getElementsByClassName("recomendacao")
-const path = "../static/musicas/"
 const musicasProvisorio = [
     ["aguas de março", "elis regina & tom jobim"],
     ["tocando em frente", "almir sater & renato teixeira"],
@@ -56,12 +65,14 @@ const musicasProvisorio = [
     ["levanta e anda", "emicida"],
     ["sulicídio", "baco exu do blues & diomedes chinaski"]
 ];
+
 const playlist0 = [];
 const playlist1 = [];
 const playlist2 = [];
 const playlist3 = []; 
 const playlists = [playlist0, playlist1, playlist2, playlist3]
-
+console.log(playlists)
+console.log(todasPlaylists)
 
 
 
@@ -75,15 +86,14 @@ function AtualizarRecomendacao(){
         console.log(recomendacao)
     }
 }
-AtualizarRecomendacao()
-
 
 
 function AtualizarBiblioteca(){
     document.getElementById("musica-3").textContent = document.getElementById("musica-2").textContent
     document.getElementById("musica-2").textContent = document.getElementById("musica-1").textContent
     document.getElementById("musica-1").textContent = document.getElementById("nomedamusica").textContent
-}
+} //ao escolher uma musica nova pra tocar, a biblioteca pula uma musica
+
 for(const musiquinha of document.getElementsByClassName("historico")){
     musiquinha.onclick = function(){
         const cantor = new Map(musicasProvisorio).get(musiquinha.textContent)
@@ -92,42 +102,31 @@ for(const musiquinha of document.getElementsByClassName("historico")){
         CarregarMusica(musiquinha.textContent, cantor)
         
     }
-}
+} //ao clicar numa musica da biblioteca, procura oo nome do cantor e começa a tocar
+
+for(const musiquinha of listaRecomendacao){
+    musiquinha.onclick = function(){
+        CarregarMusica(musiquinha.children[1].textContent, musiquinha.children[2].textContent)  
+    }
+} //ao clicar numa musica das recomendações, começa a tocar
 
 
 
 function Pausar(){
+    const botaoPause = document.getElementById("botaoPause");
     if(tocando == 1){
         musica.pause()
         tocando = 0
-        document.getElementById('botaoPause').classList.remove(...["fa-solid", "fa-pause", "fa-3x"])
-        document.getElementById('botaoPause').classList.add(...["fa-solid", "fa-play", "fa-3x"]);    
+        botaoPause.classList.remove("fa-pause")
+        botaoPause.classList.add("fa-play");    
     }
     else if(tocando == 0){
         musica.play()
         tocando = 1
-        document.getElementById('botaoPause').classList.remove(...["fa-solid", "fa-play", "fa-3x"]);
-        document.getElementById('botaoPause').classList.add(...["fa-solid", "fa-pause", "fa-3x"])
+        botaoPause.classList.remove("fa-play");
+        botaoPause.classList.add("fa-pause")
     }
-}
-function formatarTempo(tempo){
-    const minutos = Math.floor(tempo / 60)
-     const segundos = Math.floor(tempo % 60)
-    return `${minutos}:${segundos.toString().padStart(2, '0')}` 
-}
-function CarregarBarra(){
-    document.getElementById("barra").max = musica.duration;
-    document.getElementById("tempoTotal").textContent = formatarTempo(musica.duration);
-    AtualizarRecomendacao()
-    AtualizarBiblioteca()
-}
-function AtualizarBarra(){
-    document.getElementById("barra").value = musica.currentTime;
-    document.getElementById("tempoAtual").textContent = formatarTempo(musica.currentTime)
-} 
-function ModificarBarra(){
-    musica.currentTime = document.getElementById("barra").value
-}
+} //pausa (ou despausa) e modifica a figura (figura de pausado ou o triangulo)
 
 
 
@@ -158,17 +157,14 @@ function AtualizarPlaylist(){
         console.log(playlist2)
         console.log(playlist3)
     })
-}
-function ChecarPlaylist(){
-    if (playlist==0){
-        document.getElementById('addplaylist').classList = ""
-        document.getElementById('addplaylist').classList.add(...["fa-solid", "fa-square-plus", "fa-3x"])
-    }
-    else if(playlist==1){
-        document.getElementById('addplaylist').classList = ""
-        document.getElementById('addplaylist').classList.add(...["fa-regular", "fa-square-plus", "fa-3x"])
-    }
-}
+} //atualiza as musicas nas 3 listas de playlists
+
+function ZerarPlaylist(){
+    const botaoPlaylist = document.getElementById("botaoPlaylist") 
+    botaoPlaylist.classList.add("fa-regular")
+    playlist = 0
+} // ao iniciar uma musica, retorna a figura de playlst ao padrão
+
 function DisplayPlaylist(musica){
     let i = 0
     const songs = document.createElement('p')
@@ -178,24 +174,27 @@ function DisplayPlaylist(musica){
     document.getElementById('playlistAtual').appendChild(songs)
     i++
     
-}
+} // adiciona ao html as musicas da playlist selecionada
+
 function AdicionarPlaylist(){
+    const botaoPlaylist = document.getElementById("botaoPlaylist")
     if(musica.src==""){
         window.alert('nenhuma musica selecionada')
     }
     else if (playlist==0){
-        document.getElementById('addplaylist').classList.remove(...["fa-regular", "fa-square-plus", "fa-3x"])
-        document.getElementById('addplaylist').classList.add(...["fa-solid", "fa-square-plus", "fa-3x"])
+        botaoPlaylist.classList.remove("fa-regular")
+        botaoPlaylist.classList.add("fa-solid")
         document.getElementById('popup').style.display = "block"
         playlist = 1
     }
     else if(playlist==1){
-        document.getElementById('addplaylist').classList.remove(...["fa-solid", "fa-square-plus", "fa-3x"])
-        document.getElementById('addplaylist').classList.add(...["fa-regular", "fa-square-plus", "fa-3x"])
+        botaoPlaylist.classList.remove("fa-solid")
+        botaoPlaylist.classList.add("fa-regular")
         window.alert('voce removeu essa musica da playlist')
         playlist = 0
     }
-}
+} //modifica a figura de playlist (selecionado ou removido) e mostra as opções para guardar a playlist
+
 function SelecionarPlaylist(){
     console.log(`${this.id[13]}`)
     fetch("/adicionarPlaylist",{
@@ -212,9 +211,19 @@ function SelecionarPlaylist(){
         })
     })
     .then(document.getElementById('popup').style.display="none")
-    .then(AtualizarPlaylist)
+    .then(resposta => resposta.json())
+    .then(dados => {
+        if (dados.resposta == 0) {
+            window.alert('musica ja esta em uma playlist')
+        }
+        else {
+            AtualizarPlaylist()
+        }
+    })
+    
     
 }
+
 function DefinirPlaylist(){
     document.getElementById('playlistAtual').innerHTML = ""
     const posicaoPlaylist = Number(this.id[8])
@@ -225,30 +234,23 @@ function DefinirPlaylist(){
     }
 }
 
-AtualizarPlaylist()
 
 
-function ChecarCurtida(){
-    if(curtida==1){
-        document.getElementById('coracao').classList.remove(...document.getElementById('coracao').classList)
-        document.getElementById('coracao').classList.add(...["fa-solid", "fa-heart", "fa-3x"])
-        window.alert('voce curtiu essa musica')
-        curtida = 1
-    }
-    else if(curtida==0){
-        document.getElementById('coracao').classList.remove(...document.getElementById('coracao').classList)
-        document.getElementById('coracao').classList.add(...["fa-regular", "fa-heart", "fa-3x"])
-    }
-}
+
+function ZerarCurtida(){   
+    const botaoCurtida = document.getElementById('botaoCurtida')
+    botaoCurtida.classList.add("fa-regular")
+    curtida = 0
+} // ao iniciar uma musica, retorna a figura de curtida ao padrão
 function Curtir(){
+    const botaoCurtida = document.getElementById("botaoCurtida")
     if(musica.src==""){
         window.alert('nenhuma musica selecionada')
     }
     else if (curtida==0){
         curtida = 1
-        document.getElementById('coracao').classList.remove(...["fa-regular", "fa-heart", "fa-3x"])
-        document.getElementById('coracao').classList.add(...["fa-solid", "fa-heart", "fa-3x"])
-        window.alert('voce curtiu essa musica')
+        botaoCurtida.classList.remove("fa-regular")
+        botaoCurtida.classList.add("fa-solid")
         fetch("/adicionarPlaylist",{
         method: "POST",
 
@@ -262,11 +264,20 @@ function Curtir(){
             caminho: path + document.getElementById('nomedamusica').textContent + ".mp3"
         })
     })
-    .then(AtualizarPlaylist)
+    .then(resposta => resposta.json())
+    .then(dados => {
+        if (dados.resposta == 0) {
+            window.alert('musica ja esta em uma playlist')
+        }
+        else {
+            window.alert('voce curtiu essa musica')
+            AtualizarPlaylist
+        }
+    })
     }
     else if(curtida==1){
-        document.getElementById('coracao').classList.remove(...["fa-solid", "fa-heart", "fa-3x"])
-        document.getElementById('coracao').classList.add(...["fa-regular", "fa-heart", "fa-3x"])
+        botaoCurtida.classList.remove("fa-solid")
+        botaoCurtida.classList.add("fa-regular")
         window.alert('voce removeu essa musica das suas curtidas')
         curtida = 0
     }
@@ -337,29 +348,48 @@ function pesquisar(){
     }    
 }
 
-for(const musiquinha of listaRecomendacao){
-    musiquinha.onclick = function(){
-        CarregarMusica(musiquinha.children[1].textContent, musiquinha.children[2].textContent)
-        
-    }
+function formatarTempo(tempo){
+    const minutos = Math.floor(tempo / 60)
+     const segundos = Math.floor(tempo % 60)
+    return `${minutos}:${segundos.toString().padStart(2, '0')}` 
+}
+function CarregarBarra(){
+    document.getElementById("barra").max = musica.duration;
+    document.getElementById("tempoTotal").textContent = formatarTempo(musica.duration);
+    ZerarCurtida()
+    ZerarPlaylist()
+    AtualizarBiblioteca()
+    AtualizarRecomendacao()
+}
+function AtualizarBarra(){
+    document.getElementById("barra").value = musica.currentTime;
+    document.getElementById("tempoAtual").textContent = formatarTempo(musica.currentTime)
+} 
+function ModificarBarra(){
+    musica.currentTime = document.getElementById("barra").value
 }
 
-pause.onclick = Pausar
+AtualizarPlaylist()
+AtualizarRecomendacao()
+
+
+
+pauseDiv.onclick = Pausar //clicar no botao
+
 // relacionados ao carregamento da musica
-musica.onloadedmetadata = CarregarBarra
-musica.ontimeupdate = AtualizarBarra
+
+musica.onloadedmetadata = CarregarBarra //quando a musica carregar no site, vai carregar a barra (duração total)
+musica.ontimeupdate = AtualizarBarra //toda vez que a musica passar, o tempo atualiza (passa os segundos)
 
 
 //controles da musica
 
-//barra de tempo
-document.getElementById("barra").oninput = ModificarBarra
+controleBarra.oninput = ModificarBarra //clicar na barra em alguma posição muda o tempo da musica
 
-//botao de curtida
-document.getElementById('curtida').onclick = Curtir
+curtidaDiv.onclick = Curtir //ao clicar no botão de curtida, salva na playlist curtidas 
+playlistDiv.onclick = AdicionarPlaylist //ao clicar no botão de playlist, abre opções de playlist 
 
-//adicionar à playlist
-document.getElementById('playlist').onclick = AdicionarPlaylist
+
 for(let playlists of document.getElementsByClassName('popup')){
     playlists.onclick = SelecionarPlaylist
 }
@@ -391,6 +421,6 @@ notificacao.onclick = function(){
     }
 }
 
-document.getElementById('desconectar').onclick = function(){
+Desconectar.onclick = function(){
     window.location = "/login"
 }
