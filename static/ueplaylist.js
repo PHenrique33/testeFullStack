@@ -1,4 +1,4 @@
-const path = "../static/musicas/"
+const path = "../static/musicas/" // é só um texto que serve de prefixo pra criar o caminho até a pasta das musicas
 
 const musica = document.getElementById('musica');
 const pauseDiv = document.getElementById('pauseDiv');
@@ -7,21 +7,19 @@ const curtidaDiv = document.getElementById('curtidaDiv');
 const playlistDiv = document.getElementById('playlistDiv');
 const Desconectar = document.getElementById('desconectar');
 const pesquisa = document.getElementById('pesquisa');
-const notificacao = document.getElementById("not1")
-
-
+const notificacao = document.getElementById("not1"); // servem pra pegar um elemento do HTML
 
 
 const musicasFuncionais = document.getElementsByClassName('musicasFuncionais');
 const todasPlaylists = document.getElementsByClassName('playlist')
-const sugestoes = document.getElementsByClassName('sugestoes')
+const listaRecomendacao = document.getElementsByClassName("recomendacao")
+const sugestoes = document.getElementsByClassName('sugestoes') // pega uma lista de todos os elementos de uma classe no HTML
 
 let tocando = 0;
 let curtida = 0;
-let playlist = 0;
+let playlist = 0; //só pra saber se ta tocando//salva nos curtidos//salva na playlist e mudar a aparencia
 
 const listaNotificacao = ['mensagem 1', ' notificacao comicamente grande pra ver se cabe na barrinha de notificacao oi olá', 'mensagem 3']
-const listaRecomendacao = document.getElementsByClassName("recomendacao")
 const musicasProvisorio = [
     ["aguas de março", "elis regina & tom jobim"],
     ["tocando em frente", "almir sater & renato teixeira"],
@@ -59,20 +57,19 @@ const musicasProvisorio = [
     ["vou festejar", "beth carvalho"],
     ["o show tem que continuar", "fundo de quintal"],
 
-    ["diário de um detento", "racionais mc's"],
+    ["diario de um detento", "racionais mc's"],
     ["vida loka, pt. 2", "racionais mc's"],
     ["hoje cedo", "emicida"],
     ["levanta e anda", "emicida"],
     ["sulicídio", "baco exu do blues & diomedes chinaski"]
-];
+]; // isso precisa ser salvo no Banco de dados, é provisorio
 
 const playlist0 = [];
 const playlist1 = [];
 const playlist2 = [];
-const playlist3 = []; 
-const playlists = [playlist0, playlist1, playlist2, playlist3]
-console.log(playlists)
-console.log(todasPlaylists)
+const playlist3 = []; //todas as playlists, playlist 0 é as musicas curtidas
+const playlists = [playlist0, playlist1, playlist2, playlist3] //lista de todas as playlists, diferentes do TodasPlaylists
+
 
 
 
@@ -85,7 +82,7 @@ function AtualizarRecomendacao(){
         recomendacao.children[2].innerHTML = musicasProvisorio[aleatorio][1]
         console.log(recomendacao)
     }
-}
+} // toda vez que roda, as recomendações mudam, mas por hora, elas funcionam de forma aleatoria
 
 
 function AtualizarBiblioteca(){
@@ -193,7 +190,7 @@ function AdicionarPlaylist(){
         window.alert('voce removeu essa musica da playlist')
         playlist = 0
     }
-} //modifica a figura de playlist (selecionado ou removido) e mostra as opções para guardar a playlist
+} // modifica a figura de playlist (selecionado ou removido) e mostra as opções para guardar a playlist
 
 function SelecionarPlaylist(){
     console.log(`${this.id[13]}`)
@@ -222,7 +219,7 @@ function SelecionarPlaylist(){
     })
     
     
-}
+} // ao selecionar uma das playlists do pop-up, manda um fetch pro python e chama o Atualizar playlist
 
 function DefinirPlaylist(){
     document.getElementById('playlistAtual').innerHTML = ""
@@ -232,7 +229,7 @@ function DefinirPlaylist(){
     for(const musiquinha of musicasFuncionais){
         musiquinha.onclick = CarregarMusica        
     }
-}
+} // chama a função DisplayPlaylist e faz com que cada musica seja clicavel 
 
 
 
@@ -281,7 +278,7 @@ function Curtir(){
         window.alert('voce removeu essa musica das suas curtidas')
         curtida = 0
     }
-}
+} // salva musica na playlist 0, vulgo, musicas curtidas
 
 
 function CarregarMusica(nome, artista=undefined){
@@ -318,14 +315,16 @@ function pesquisar(){
     if(document.getElementsByClassName('sugestaoMusica').length>0){
         for(const musiquinha of document.getElementsByClassName('sugestaoMusica')){
             musiquinha.innerHTML=""
-        }
+        } // toda vez que o input mudar, isso deleta tudo que tava, pra evitar repetição 
     }
     for(const item of musicasProvisorio){
         if(pesquisa.value == ""){
             for (const musiquinha of document.getElementsByClassName('sugestaoMusica')){
                 musiquinha.textContent = ""
             }
-        }
+        } // se o input for vazio, retorna nada (pra evitar que cconsidere que tem vazio em todas as 
+          // musicas e print todas quando não precisa)
+
         else if(item[0].includes(pesquisa.value) || item[1].includes(pesquisa.value)){
             const sugestaoMusica = document.createElement('p')
             sugestaoMusica.id = `sugestaoMusica${i}`
@@ -333,26 +332,30 @@ function pesquisar(){
             sugestaoMusica.innerHTML = `${item[0]}<br>${item[1]}`
             document.getElementById('sugestoes').appendChild(sugestaoMusica)
             console.log(document.getElementById(`sugestaoMusica${i}`).id)
-        }
+        } // se o o nome da musica ou artista tem o input da barra de pesquisa, mostra nas sugestoes
+
         for(const Sugestao of document.getElementsByClassName('sugestaoMusica')){
             Sugestao.onclick = function(){
-                const argumento = Sugestao.innerHTML.substring(0, Sugestao.innerHTML.indexOf("<br>"))
+                const argumentoMusica = Sugestao.innerHTML.substring(0, Sugestao.innerHTML.indexOf("<br>"))
                 const argumentoArtista = Sugestao.innerHTML.substring(Sugestao.innerHTML.indexOf("<br>")+4, Sugestao.length)
-                CarregarMusica(argumento, argumentoArtista)
+                CarregarMusica(argumentoMusica, argumentoArtista)
+                pesquisa.value = "" 
                 for(const musiquinha of document.getElementsByClassName('sugestaoMusica')){
                     musiquinha.innerHTML=""
                 }
             }
-        }
-        i++
+        } // pra cada musica das sugestões, ao clicar puxa a musica e zera a barra de pesquisa
+
+        i++ // esse indice serve pra criar um ID diferente pra cada musica
     }    
-}
+} // o resumo foi feito dentro da função, tem coisa pra caralho
 
 function formatarTempo(tempo){
     const minutos = Math.floor(tempo / 60)
      const segundos = Math.floor(tempo % 60)
     return `${minutos}:${segundos.toString().padStart(2, '0')}` 
-}
+} // pega o tempo da musica (duration) e formata no modo mm:ss
+
 function CarregarBarra(){
     document.getElementById("barra").max = musica.duration;
     document.getElementById("tempoTotal").textContent = formatarTempo(musica.duration);
@@ -360,17 +363,19 @@ function CarregarBarra(){
     ZerarPlaylist()
     AtualizarBiblioteca()
     AtualizarRecomendacao()
-}
+} // atualiza o maximo da barra pra ser igual ao tempo da musica e formata o tempo que aparece embaixo 
+
 function AtualizarBarra(){
     document.getElementById("barra").value = musica.currentTime;
     document.getElementById("tempoAtual").textContent = formatarTempo(musica.currentTime)
-} 
+} // a cada segundo, avança o tempo da barra 
 function ModificarBarra(){
+    console.log(musica)
     musica.currentTime = document.getElementById("barra").value
-}
+} // ao clicar em algum lugar na barra, muda o tempo da musica pro valor respectivo
 
 AtualizarPlaylist()
-AtualizarRecomendacao()
+AtualizarRecomendacao() // atualiza as playlists e as musicas nas recomendações assim que abre o app
 
 
 
@@ -392,17 +397,18 @@ playlistDiv.onclick = AdicionarPlaylist //ao clicar no botão de playlist, abre 
 
 for(let playlists of document.getElementsByClassName('popup')){
     playlists.onclick = SelecionarPlaylist
-}
+} // ao clicar em uma das playlists no pop-up, chama o SelecionarPlaylist nessa playlist
 
 
 //carregar uma playlist
 for(const playlistEscolhida of todasPlaylists){
     playlistEscolhida.onclick = DefinirPlaylist
-}
+} // ao clicar em uma das playlists no menu, mostra as musicas da playlist em questão
 
 
 //barra de pesquisa (entender como funciona)
-pesquisa.oninput = pesquisar
+
+pesquisa.oninput = pesquisar // quando o input na barra de pesquisa muda, chama a função
 
 //notificações
 //texto inicial + total de notificações
@@ -419,8 +425,8 @@ notificacao.onclick = function(){
         listaNotificacao.shift()
         document.getElementById("quantNotificacoes").textContent = `notificacoes: ${listaNotificacao.length}`
     }
-}
+} // se não tiver notificações, quando clicar retorna "sem notificações", do contrario, retorna a notificacao
 
 Desconectar.onclick = function(){
     window.location = "/login"
-}
+} // ao apertar o botao de desconectar, muda o site pra login
