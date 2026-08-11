@@ -1,0 +1,29 @@
+function CarregarMusica(nome, artista=undefined){
+    let source;
+    console.log(artista)
+    nome = String(nome)
+    
+    if(nome == "[object PointerEvent]"){
+        if(this.textContent.includes('--')){
+            source = path + this.textContent.substring(0, this.textContent.indexOf('--')-1) + ".mp3"
+            document.getElementById("nomedamusica").innerHTML = this.textContent.substring(0, this.textContent.indexOf('--')-1)
+            document.getElementById("nomedoartista").innerHTML = this.textContent.substring(this.textContent.indexOf('--')+3, this.textContent.length)
+        }
+        else{
+            source = path + this.textContent + '.mp3'
+            document.getElementById("nomedamusica").innerHTML = this.textContent
+            console.log(this.textContent + "aaaaaaaa")
+        }
+    }
+    else{
+        source = path + nome + '.mp3'
+        document.getElementById("nomedamusica").innerHTML = nome
+        document.getElementById("nomedoartista").innerHTML = artista
+    }
+
+    console.log(source)
+    musica.src = source
+    musica.load()
+    musica.play()
+    AtualizarBarra
+}

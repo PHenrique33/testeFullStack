@@ -161,7 +161,7 @@ h6{
     transform: translate(50px, 10px);
     border-radius: 50%;
 }
-#texto{
+#textoDiv{
     max-height: 300px    ;
     width: 90%;
     transform: translate(5%, -10px);
@@ -191,8 +191,9 @@ h6{
 #recomendacao{
     display: inline-block;
     height: 40%;
+    width: 90%;
     overflow: auto;
-    background-color: aquamarine;
+    background-color: rgb(68, 43, 41);
 }
 .recomendacao{
     justify-content: center;
@@ -223,7 +224,7 @@ h6{
     margin-top: 30px;
     display: inline-block;
 }
-#imagem{
+#IMGrecomendacao0{
     height: 75px;
     border-radius: 10px;
 }

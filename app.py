@@ -1,35 +1,7 @@
 from flask import Flask, request, render_template, jsonify, redirect, url_for
 import sqlite3
-
-
-def StartSQLite3():
-    conexao = sqlite3.connect('app.db')
-    cursor = conexao.cursor()
-    cursor.execute(''' CREATE TABLE IF NOT EXISTS login (
-                id INTEGER PRIMARY KEY AUTOINCREMENT,
-                nome TEXT NOT NULL,
-                senha TEXT NOT NULL)''')
-    
-    cursor.execute(''' CREATE TABLE IF NOT EXISTS musicas (
-                id INTEGER PRIMARY KEY AUTOINCREMENT,
-                nome TEXT NOT NULL,
-                artista TEXT NOT NULL,
-                caminho TEXT NOT NULL)''')
-    
-def salvarLogin(nome, senha):
-    # StartSQLite3()
-    conexao = sqlite3.connect('app.db')
-    cursor = conexao.cursor()
-    cursor.execute('''INSERT INTO login (nome, senha)
-                   VALUES (?, ?)''', (nome, senha))
-    conexao.commit()
-
-def salvarPlaylist(playlist, musica, artista, caminho):
-    conexao = sqlite3.connect('app.db')
-    cursor = conexao.cursor()
-    cursor.execute(f'''INSERT INTO {usuarioAtivo} (playlist, musica, artista, caminho)
-                    VALUES (?, ?, ?, ?)''', (playlist, musica, artista, caminho))
-    conexao.commit()
+from BancoDados import *
+from KezIA import gerar_significado
 
 StartSQLite3()
 app = Flask(__name__)
@@ -49,8 +21,10 @@ def login():
 
 @app.route("/ueplaylist")
 def ueplaylist():
-    print(usuarioAtivo)
-    return render_template("ueplaylist.html")
+    if usuarioAtivo=="":
+        return inicio()
+    else:
+        return render_template("ueplaylist.html")
 
 @app.route("/criadorconta", methods = ["POST"])
 def criadorconta():
@@ -111,7 +85,7 @@ def adicionarPlaylist():
     caminho = Json['caminho']
     check = cursor.execute(f"SELECT * FROM {usuarioAtivo} WHERE musica = ?",(musica,)).fetchone()
     if check == None:
-        salvarPlaylist(playlist, musica, artista, caminho)
+        salvarPlaylist(playlist, musica, artista, caminho, usuarioAtivo)
         return jsonify(
             {"resposta": "Playlist adicionada com sucesso"},
             {"playlist": playlist})
@@ -126,8 +100,35 @@ def AtualizarPlaylist():
     cursor = conexao.cursor()
     cursor.execute(f"SELECT * FROM {usuarioAtivo}")
     musicas = cursor.fetchall()
+    print(musicas)
     return(musicas)
 
+@app.route("/gerarSignificado", methods = ["POST"])
+def chamarIA(): 
+    Json = request.get_json()
+    significado = gerar_significado(Json)
+    return jsonify(
+        {"significado": significado})
+
+@app.route("/musicasProvisorias")
+def musicasProvisorias():
+    conexao = sqlite3.connect('app.db')
+    cursor = conexao.cursor()
+    cursor.execute(f"SELECT * FROM musicas")
+    musicas = cursor.fetchall()
+    print(musicas)
+    return(musicas)
+
+@app.route("/RemoverMusica", methods = ["POST"])
+def RemoverMusica():
+    Json = request.get_json()
+    print(Json)
+    print('BBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBB')
+    RemoverPlaylist(usuarioAtivo, Json)
+    print(Json)
+    return(Json)
+    
+    
 
 if __name__ == "__main__":
     app.run(debug=True)
