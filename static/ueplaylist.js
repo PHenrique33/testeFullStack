@@ -7,7 +7,9 @@ const curtidaDiv = document.getElementById('curtidaDiv');
 const playlistDiv = document.getElementById('playlistDiv');
 const Desconectar = document.getElementById('desconectar');
 const pesquisa = document.getElementById('pesquisa');
-const notificacao = document.getElementById("not1"); // servem pra pegar um elemento do HTML
+const notificacao = document.getElementById("not1"); 
+const Botao2 = document.getElementById("botao2");
+const kezIA = document.getElementById("KezIA"); // servem pra pegar um elemento do HTML
 
 
 const musicasFuncionais = document.getElementsByClassName('musicasFuncionais');
@@ -20,50 +22,8 @@ let curtida = 0;
 let playlist = 0; //só pra saber se ta tocando//salva nos curtidos//salva na playlist e mudar a aparencia
 
 const listaNotificacao = ['mensagem 1', ' notificacao comicamente grande pra ver se cabe na barrinha de notificacao oi olá', 'mensagem 3']
-const musicasProvisorio = [
-    ["aguas de março", "elis regina & tom jobim"],
-    ["tocando em frente", "almir sater & renato teixeira"],
-    ["como nossos pais", "elis regina"],
-    ["o leaozinho", "caetano veloso"],
-    ["anunciaçao", "alceu valença"],
-    ["palco", "gilberto gil"],
-    ["sina", "djavan"],
-    ["partido alto", "chico buarque"],
 
-    ["tempo perdido", "legião urbana"],
-    ["pro dia nascer feliz", "barão vermelho"],
-    ["primeiros erros", "capital inicial"],
-    ["anna julia", "los hermanos"],
-    ["dias de luta, dias de gloria", "charlie brown jr."],
-    ["malandragem", "cássia eller"],
-    ["pais e filhos", "legião urbana"],
-    ["metamorfose ambulante", "raul seixas"],
-
-    ["evidencias", "chitãozinho & xororó"],
-    ["fio de cabelo", "chitãozinho & xororó"],
-    ["boate azul", "joaquim & manuel"],
-    ["romaria", "renato teixeira"],
-    ["infiel", "marília mendonça"],
-    ["trevo (tu)", "anavitória & tiago iorc"],
-
-    ["cheia de manias", "raça negra"],
-    ["depois do prazer", "só pra contrariar"],
-    ["telegrama", "exaltasamba"],
-    ["livre pra voar", "art popular"],
-    ["temporal", "ferrugem"],
-    ["aquarela brasileira", "martinho da vila"],
-    ["trem das onze", "demônios da garoa"],
-    ["não deixe o samba morrer", "alcione"],
-    ["vou festejar", "beth carvalho"],
-    ["o show tem que continuar", "fundo de quintal"],
-
-    ["diario de um detento", "racionais mc's"],
-    ["vida loka, pt. 2", "racionais mc's"],
-    ["hoje cedo", "emicida"],
-    ["levanta e anda", "emicida"],
-    ["sulicídio", "baco exu do blues & diomedes chinaski"]
-]; // isso precisa ser salvo no Banco de dados, é provisorio
-
+const musicasProvisorio = [];
 const playlist0 = [];
 const playlist1 = [];
 const playlist2 = [];
@@ -76,8 +36,11 @@ const playlists = [playlist0, playlist1, playlist2, playlist3] //lista de todas 
 
 function AtualizarRecomendacao(){
     for(const recomendacao of listaRecomendacao){
-        const aleatorio = Math.floor(Math.random()*36)
+        const aleatorio = Math.floor(Math.random()*38)
         console.log(aleatorio)
+        console.log(musicasProvisorio)
+        console.log(recomendacao)
+        recomendacao.children[0].children[0].src = musicasProvisorio[aleatorio][2]
         recomendacao.children[1].innerHTML = musicasProvisorio[aleatorio][0]
         recomendacao.children[2].innerHTML = musicasProvisorio[aleatorio][1]
         console.log(recomendacao)
@@ -91,19 +54,42 @@ function AtualizarBiblioteca(){
     document.getElementById("musica-1").textContent = document.getElementById("nomedamusica").textContent
 } //ao escolher uma musica nova pra tocar, a biblioteca pula uma musica
 
+function ChamarIA(){
+    const musica = document.getElementById('nomedamusica').textContent
+    const artista = document.getElementById('nomedoartista').textContent
+    document.getElementById("texto").textContent = "pesquisando..."
+    fetch("/gerarSignificado", {
+        method: "POST",
+        
+        headers: {
+            "Content-Type": "application/json"
+        },
+        body: JSON.stringify({
+            musica: musica,
+            artista: artista
+        })
+    })
+    .then(resposta => resposta.json())
+    .then(dados => {
+        document.getElementById("texto").textContent = `${dados.significado}`
+    })
+
+    
+}
+
 for(const musiquinha of document.getElementsByClassName("historico")){
     musiquinha.onclick = function(){
         const cantor = new Map(musicasProvisorio).get(musiquinha.textContent)
         console.log(musiquinha.textContent)
         console.log(cantor)
-        CarregarMusica(musiquinha.textContent, cantor)
+        CarregarMusica(musiquinha.textContent)
         
     }
 } //ao clicar numa musica da biblioteca, procura oo nome do cantor e começa a tocar
 
 for(const musiquinha of listaRecomendacao){
     musiquinha.onclick = function(){
-        CarregarMusica(musiquinha.children[1].textContent, musiquinha.children[2].textContent)  
+        CarregarMusica(musiquinha.children[1].textContent)  
     }
 } //ao clicar numa musica das recomendações, começa a tocar
 
@@ -126,11 +112,33 @@ function Pausar(){
 } //pausa (ou despausa) e modifica a figura (figura de pausado ou o triangulo)
 
 
+function MusicasProvisorias(){
+    fetch("/musicasProvisorias")
+    .then(resposta => resposta.json())
+    .then(dados => {
+        
+        for(const musiquinhas of dados){
+            const listinha = [musiquinhas[1], musiquinhas[2], musiquinhas[3]]
+            musicasProvisorio.push(listinha)
+            console.log(listinha)
+        }
+        console.log(musicasProvisorio)
+    })
+    .then(AtualizarRecomendacao)
+    .then(AtualizarPlaylist)
+}
+
 
 function AtualizarPlaylist(){
     fetch("/AtualizarPlaylist")
     .then(resposta => resposta.json())
     .then(dados => {
+        console.log(dados)
+        playlist0.length = 0
+        playlist1.length = 0
+        playlist2.length = 0
+        playlist3.length = 0
+        console.log(dados)
         for(item of dados){
             console.log(item)
             const conjunto = [item[2], item[3]]
@@ -154,6 +162,7 @@ function AtualizarPlaylist(){
         console.log(playlist2)
         console.log(playlist3)
     })
+    .then(DefinirPlaylist())
 } //atualiza as musicas nas 3 listas de playlists
 
 function ZerarPlaylist(){
@@ -173,6 +182,20 @@ function DisplayPlaylist(musica){
     
 } // adiciona ao html as musicas da playlist selecionada
 
+function RemoverPlaylist(){
+    console.log('eu tenho muito amor a vida')
+    fetch("/RemoverMusica", {
+        method:"POST",
+        headers:{
+            "Content-Type": "application/json"
+        },
+        body:JSON.stringify({
+            remover:document.getElementById("nomedamusica").textContent
+        })
+    })
+    .then(AtualizarPlaylist())
+}
+
 function AdicionarPlaylist(){
     const botaoPlaylist = document.getElementById("botaoPlaylist")
     if(musica.src==""){
@@ -188,6 +211,15 @@ function AdicionarPlaylist(){
         botaoPlaylist.classList.remove("fa-solid")
         botaoPlaylist.classList.add("fa-regular")
         window.alert('voce removeu essa musica da playlist')
+        for(const playlist of playlists){
+            for(const coisas of playlist){
+                console.log(coisas)
+                if(coisas[0].includes(document.getElementById("nomedamusica").textContent)){
+                    RemoverPlaylist()
+                    console.log('abcdefg')
+                }
+            }
+        }
         playlist = 0
     }
 } // modifica a figura de playlist (selecionado ou removido) e mostra as opções para guardar a playlist
@@ -229,6 +261,7 @@ function DefinirPlaylist(){
     for(const musiquinha of musicasFuncionais){
         musiquinha.onclick = CarregarMusica        
     }
+    console.log(playlist1)
 } // chama a função DisplayPlaylist e faz com que cada musica seja clicavel 
 
 
@@ -261,14 +294,14 @@ function Curtir(){
             caminho: path + document.getElementById('nomedamusica').textContent + ".mp3"
         })
     })
+    .then(document.getElementById('popup').style.display="none")
     .then(resposta => resposta.json())
     .then(dados => {
         if (dados.resposta == 0) {
             window.alert('musica ja esta em uma playlist')
         }
         else {
-            window.alert('voce curtiu essa musica')
-            AtualizarPlaylist
+            AtualizarPlaylist()
         }
     })
     }
@@ -276,32 +309,50 @@ function Curtir(){
         botaoCurtida.classList.remove("fa-solid")
         botaoCurtida.classList.add("fa-regular")
         window.alert('voce removeu essa musica das suas curtidas')
+        for(const playlist of playlists){
+            for(const coisas of playlist){
+                console.log(coisas)
+                if(coisas[0].includes(document.getElementById("nomedamusica").textContent)){
+                    RemoverPlaylist()
+                    console.log('abcdefg')
+                }
+            }
+        }
         curtida = 0
     }
 } // salva musica na playlist 0, vulgo, musicas curtidas
 
 
-function CarregarMusica(nome, artista=undefined){
+function CarregarMusica(nome){
     let source;
-    console.log(artista)
     nome = String(nome)
     
     if(nome == "[object PointerEvent]"){
+        console.log(nome)
         if(this.textContent.includes('--')){
-            source = path + this.textContent.substring(0, this.textContent.indexOf('--')-1) + ".mp3"
-            document.getElementById("nomedamusica").innerHTML = this.textContent.substring(0, this.textContent.indexOf('--')-1)
-            document.getElementById("nomedoartista").innerHTML = this.textContent.substring(this.textContent.indexOf('--')+3, this.textContent.length)
+            nome = document.getElementById("nomedamusica").innerHTML = this.textContent.substring(0, this.textContent.indexOf('--')-1)
+            
+            source = path + nome + ".mp3"
+            const resultado = musicasProvisorio.find(lista => lista[0] === nome);
+            document.getElementById("nomedamusica").textContent = nome
+            document.getElementById("nomedoartista").textContent = resultado[1]
+            document.getElementById("IMGrecomendacao0").src = resultado[2]
         }
-        else{
-            source = path + this.textContent + '.mp3'
-            document.getElementById("nomedamusica").innerHTML = this.textContent
-            console.log(this.textContent + "aaaaaaaa")
-        }
+        // else{
+        //     console.log('2')
+        //     console.log(nome)
+        //     source = path + this.textContent + '.mp3'
+        //     document.getElementById("nomedamusica").innerHTML = this.textContent
+        // }
     }
     else{
         source = path + nome + '.mp3'
-        document.getElementById("nomedamusica").innerHTML = nome
-        document.getElementById("nomedoartista").innerHTML = artista
+        const resultado = musicasProvisorio.find(lista => lista[0] === nome);
+        document.getElementById("nomedamusica").textContent = nome
+        document.getElementById("nomedoartista").textContent = resultado[1]
+        document.getElementById("IMGrecomendacao0").src = resultado[2]
+        console.log(resultado)
+        console.log(resultado[2])
     }
 
     console.log(source)
@@ -337,8 +388,7 @@ function pesquisar(){
         for(const Sugestao of document.getElementsByClassName('sugestaoMusica')){
             Sugestao.onclick = function(){
                 const argumentoMusica = Sugestao.innerHTML.substring(0, Sugestao.innerHTML.indexOf("<br>"))
-                const argumentoArtista = Sugestao.innerHTML.substring(Sugestao.innerHTML.indexOf("<br>")+4, Sugestao.length)
-                CarregarMusica(argumentoMusica, argumentoArtista)
+                CarregarMusica(argumentoMusica)
                 pesquisa.value = "" 
                 for(const musiquinha of document.getElementsByClassName('sugestaoMusica')){
                     musiquinha.innerHTML=""
@@ -374,8 +424,8 @@ function ModificarBarra(){
     musica.currentTime = document.getElementById("barra").value
 } // ao clicar em algum lugar na barra, muda o tempo da musica pro valor respectivo
 
-AtualizarPlaylist()
-AtualizarRecomendacao() // atualiza as playlists e as musicas nas recomendações assim que abre o app
+MusicasProvisorias()
+ // atualiza as playlists e as musicas nas recomendações assim que abre o app
 
 
 
@@ -409,6 +459,8 @@ for(const playlistEscolhida of todasPlaylists){
 //barra de pesquisa (entender como funciona)
 
 pesquisa.oninput = pesquisar // quando o input na barra de pesquisa muda, chama a função
+document.getElementById("botao2").onclick = ChamarIA
+
 
 //notificações
 //texto inicial + total de notificações
