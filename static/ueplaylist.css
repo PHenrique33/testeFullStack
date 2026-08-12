@@ -49,7 +49,7 @@ h6{
     flex-wrap: wrap;
 }
 #centro{
-    transform: translateY(-90px);
+    transform: translateY(-75px);
     display: inline-flex;
     width: 39%;
     height: 100vh;
@@ -69,13 +69,15 @@ h6{
     align-items: flex-start;
 }
 #pesquisa{
+    transform: translateY(30px);
     text-align: center;
     font-weight: 900;
     width: 90%;
-    height: 30px;
-    background-color: #7E5731;
+    height: 50px;
+    background-color: #ffffff;
     border-radius: 30px;
-    border: none;
+    border-style: dashed;
+    border-color: #7E5731;
 }
 .titulo{
     height: 100%;
@@ -83,7 +85,7 @@ h6{
 }
 #sugestoes{
     min-width: 90%;
-    transform: translateY(30px);
+    transform: translateY(80px);
     position: absolute;
     display: block;
     background-color: #ffffffd7;
@@ -141,6 +143,24 @@ h6{
     display: inline-block;
     background-color: #FFD8B3;
     transform: translateY(10px);
+}
+#musicas{
+    max-height: 150px;
+    overflow: scroll;
+}
+.totalidade{
+    transform: translateX(5%);
+    display: inline-block;
+    background-color: #7E5731;
+    width: 90%;
+    border-radius: 10px;
+    padding: 2px 2px;
+    margin: 2px 2px;
+    font-weight: 900;
+}
+.totalidade:hover{
+    background-color: #b17b45;
+    cursor: pointer;
 }
 #GabrielAI{
     display: inline-block;
