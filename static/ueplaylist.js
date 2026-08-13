@@ -327,6 +327,15 @@ function CarregarMusica(nome){
             document.getElementById("nomedoartista").textContent = resultado[1]
             document.getElementById("IMGrecomendacao0").src = resultado[2]
         }
+        else{
+            nome = document.getElementById("nomedamusica").innerHTML = this.textContent
+            
+            source = path + nome + ".mp3"
+            const resultado = musicasProvisorio.find(lista => lista[0] === nome);
+            document.getElementById("nomedamusica").textContent = nome
+            document.getElementById("nomedoartista").textContent = resultado[1]
+            document.getElementById("IMGrecomendacao0").src = resultado[2]
+        }
     }
     else{
         source = path + nome + '.mp3'
