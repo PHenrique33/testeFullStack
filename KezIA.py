@@ -6,7 +6,7 @@ import json #permite trabalhar no formato JSON
 
 from comandos import sistema # Puxa a variável sistema do arquivo prompt
 
-client = genai.Client(api_key=Key Foda) #Dá acesso ao serviço IA do gemini
+client = genai.Client(api_key=Key) #Dá acesso ao serviço IA do gemini
 
 def gerar_significado(musica_significado):
     """Recebe uma música e mostra o significado dela"""      
